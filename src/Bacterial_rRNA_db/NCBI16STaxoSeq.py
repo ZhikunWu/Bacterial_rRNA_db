@@ -21,8 +21,12 @@ def combine_assembly_silva_16S(AccessionSpecies_db, assembly_db, BacterialSeq_db
     Bacteria|Firmicutes|Bacilli|Bacillales|Bacillaceae|Thalassobacillus|Thalassobacillus acidophilus
 
     BacterialSeq:
-    genome_name|contig_id|contig_strand|contig_start|contig_end|gc_ratio|(contig_end-contig_start)
-    GCF_000988235.1_ASM98823v1_genomic.fna|NZ_LAYS01000008.1|-|4078|2561|0.58|-1517
+    genome_name|contig_id|contig_strand|contig_start|contig_end|gc_ratio|seq
+    GCF_000988235.1_ASM98823v1_genomic.fna|NZ_LAYS01000008.1|-|4078|2561|0.58|ATGT
+
+    GeneCopy
+    genome_name|copy
+    GCF_000988235.1_ASM98823v1_genomic.fna|1
     """
     conn = sqlite3.connect(AccessionSpecies_db)
     cursor = conn.cursor()

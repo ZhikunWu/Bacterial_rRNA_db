@@ -14,10 +14,7 @@ SRC_DIR = '/home/wzk/github/Bacterial_rRNA_db/src/Bacterial_rRNA_db'
 
 SAMPLES = config["SAMPLES"]
 
-def makedir(outdir):
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-            
+
 
 rule all:
     input:
