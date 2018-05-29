@@ -1,0 +1,179 @@
+# cmsearch :: search CM(s) against a sequence database
+# INFERNAL 1.1.1 (July 2014)
+# Copyright (C) 2014 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query CM file:                         /home/wzk/database/Bacterial_genome/seeds/RF00177.seed.cm
+# target sequence database:              /home/wzk/database/Bacterial_genome/test_temp/GCF_900232105.1_Kuenenia_stuttgartiensis_MBR1_genomic.fna
+# number of worker threads:              40
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       SSU_rRNA_bacteria  [CLEN=1533]
+Accession:   RF00177
+Description: Bacterial small subunit ribosomal RNA
+Hit scores:
+ rank     E-value  score  bias  sequence        start     end   mdl trunc   gc  description
+ ----   --------- ------ -----  ------------- ------- -------   --- ----- ----  -----------
+  (1) !         0 1467.2  11.8  NZ_LT934425.1 1071399 1069811 -  cm    no 0.53  Candidatus Kuenenia stuttgartiensis isolate kuenenia_mbr1_ru-n
+
+
+Hit alignments:
+>> NZ_LT934425.1  Candidatus Kuenenia stuttgartiensis isolate kuenenia_mbr1_ru-nijmegen genome assembly, chromosome: Kue
+ rank     E-value  score  bias mdl mdl from   mdl to       seq from      seq to       acc trunc   gc
+ ----   --------- ------ ----- --- -------- --------    ----------- -----------      ---- ----- ----
+  (1) !         0 1467.2  11.8  cm        1     1533 []     1071399     1069811 - .. 0.97    no 0.53
+
+                                        v       v                         v                     v                NC
+                            ::::::::<<<<<_______>>>>>,{{{{-{{{{{{,{{{{{{{{{----{{{-{{{,,<<<--<<<<<-..<<<<<<<____ CS
+  SSU_rRNA_bacteria       1 uuuauggAGaGuuUGAUCcUggCuCAGggcGaaCGCuGGCGGcgcGcuUaAcaCAuGCAAGuCGagcccca..cggggccuuaa 82     
+                            UUUAUG+AG:GU UGAUC U GC:CAG::CGAACGCUGGCGGCG:G +U+A::CAUGCAAGUCGA:C: :   ::G::CC UAA
+      NZ_LT934425.1 1071399 UUUAUGAAGGGUAUGAUCUUGGCUCAGAACGAACGCUGGCGGCGUGGAUUAGGCAUGCAAGUCGAACGAGGaaGUGCCCCGUAA 1071316
+                            ********************************************************************77558*********** PP
+
+                                       v                                                     v v          v v    NC
+                            >>>>>>>..->>->>>>>>,,,,,,[[[,,,,,,((((((((--((---(((((((,<<<<----<<<<<~~~~~~>>>>>--- CS
+  SSU_rRNA_bacteria      83 ggccccg..agggggcGgCGaAcGGGuGAGUAAcgCGcgggcAAccUacCcccgggugcgGgAUAccccc*[ 8]*gggggUAA 166    
+                            GG::C::  +: +:G:GGCGAA GGGUGAGUAA+:C::: ::AACCU+CC::: :G+::GG+AUA C :C      G: G UAA
+      NZ_LT934425.1 1071315 GGGGCGCaaGCCUAGUGGCGAAAGGGUGAGUAAUGCAUUGAUAACCUGCCUUUGAGAUGGGAAUAACUGC*[28]*GCUGCUAA 1071210
+                            *******775777******************************************************887...*..788***** PP
+
+                                       v vvv               vvv v                                                 NC
+                            -->>>>,,,,,<<<<<<<.<<<____>>>>>>>>>>,,,,<<<............_____>>>,)))))))--))))))))))< CS
+  SSU_rRNA_bacteria     167 UACcgcAUaaugccccgg.cccguaugggccggggcuAAAGgc............auuuagcCGcccgggGAugggcccgCGcc 237    
+                            UACC::AUAAU C   :G ::C +A+G::C:   G U AA:              +U ++  :GC: :::GA GG:: :::G:C
+      NZ_LT934425.1 1071209 UACCCAAUAAUACUAUAGgUGCAAAAGCACUUGUGGUCAAAUGcuaggaauucugUUCCUUGUGCUUAAAGAGGGGUUAAUGUC 1071126
+                            ********9865555555388899998885555555555555567****99988655555888********************* PP
+
+                                v                                     v                                          NC
+                            <<--<-<<<--<<<<<<<<_______>>>>>>>>>>>----->>>>,,<<<<<<<<____>>>>--->>>>]]],<<<<<<___ CS
+  SSU_rRNA_bacteria     238 ccAUcAGcuAGuuGGuggGGUAAuGGCccaCCaaggCgAuGAggggUAGccGgccuGAGAgggcGauCggCCaCAcuGGgaCUG 321    
+                            C:AU AGCUAGUUGGU:GGGUAAUGGCC:ACCAAGGC+A GA :GGUAGCCG:C UGAGAG G:G UCGGCCACACUGGGACUG
+      NZ_LT934425.1 1071125 CUAUCAGCUAGUUGGUGGGGUAAUGGCCUACCAAGGCAAAGACGGGUAGCCGGCUUGAGAGGGUGGUCGGCCACACUGGGACUG 1071042
+                            ************************************************************************************ PP
+
+                                                                v                                                NC
+                            _______>>>>>>,<<<<____>>>>,,,}}}}}}-},,,,,<-<<<---<<<<<____>>>>>->>>>,}}-}}}}}},,<<< CS
+  SSU_rRNA_bacteria     322 AGAcACGgcCCagACuCCUACGGGaGGCAGCaGugggGAAUauUgcgCAAugGgcGaAAgcCugAcgcaGCgAcgCCGCGUGgg 405    
+                            AGACAC GCCCAGACUCCUACGGGAGGC GCAG::G GAAU UU:CGCAAUG::CGAAAG::UGACG:AGC:ACGCCGCGUG:G
+      NZ_LT934425.1 1071041 AGACACUGCCCAGACUCCUACGGGAGGCUGCAGUCGAGAAUCUUUCGCAAUGCCCGAAAGGGUGACGAAGCGACGCCGCGUGUG 1070958
+                            ************************************************************************************ PP
+
+                                                            v                                                    NC
+                            <------<<<<____>>>>----->>>>,,,<<<<<<<---<-----<<<___........______>>>----->---->>>> CS
+  SSU_rRNA_bacteria     406 gGAuGAAggccUUcGggccGUAAAcccCUuUcccggGgGAagAaaaaccgaua........uuuuaucgguuuGAcggUAcCcc 481    
+                            GGA+GAA::CCUUCGGG::GUAAACC:CU+UC :G:G  A GAAA+ C:  U             A  :G UUGAC     C:C
+      NZ_LT934425.1 1070957 GGAAGAAGGCCUUCGGGUUGUAAACCACUGUCGGGAGUUAGGAAAUGCAGGUGcguuaauaGCGCACUUGCUUGACUAAGGCUC 1070874
+                            **************************************************999998887654555559**************** PP
+
+                             v         v                                      v                                  NC
+                            >>--->,,<<<<<------<<<<<-----<<____>>------->>>>>>>>>>,}}}}}}}}}},,,,,,,,,,{{{-----{ CS
+  SSU_rRNA_bacteria     482 gggAagAAGcccCGGCUAAcuccGUGCCAGCAGCCGCGGUAAuACggagGgggCaaGCGuugccCGGAaUuAuUGGGcGUAAAG 565    
+                            : GA+GAAGCC CGGCUAACUC:GUGCCAGCAGCCGCGGUAAUAC:GAGG GGCAAGCGUUG::CGGAAUUAUUGGGCGUAAAG
+      NZ_LT934425.1 1070873 CAGAGGAAGCCACGGCUAACUCUGUGCCAGCAGCCGCGGUAAUACAGAGGCGGCAAGCGUUGUUCGGAAUUAUUGGGCGUAAAG 1070790
+                            ************************************************************************************ PP
+
+                                              v       v   v    v                 v  v   v        v            v  NC
+                            ,[[[[-[-[[[,<<<<<<<-<<<<<<<<<<<----<<<<<<<_____>>>>>>>-->>>>>>>>>-->>>>>>>>>,,,((((( CS
+  SSU_rRNA_bacteria     566 gGcgcGcAgGcGGcccggcAaGucgggcgcgAAAucccgcgGCUcAACcgcgggaucgcgcccgaaACugccgggCUuGaGucc 649    
+                            +GC:CG:AGGCGGCC::G AAGUC:G :G: AAA+ C::C:GCU+AAC:G::G A+ :C: C:GA+ACU C::GGCUUGAGU C
+      NZ_LT934425.1 1070789 AGCACGUAGGCGGCCUUGCAAGUCAGUUGUGAAAGCCUUCCGCUUAACGGAAGAACGGCAUCUGAUACUACAGGGCUUGAGUAC 1070706
+                            ************************************************************************************ PP
+
+                                                                                          v          v           NC
+                            ((((--(((((((<<--<<<<<<<<---<<<______>>>------>>>>>>>>-->>,,,,<--<<____>>>)))))))-)) CS
+  SSU_rRNA_bacteria     650 ggccGAgGggggcggAAcucccgguGUAGcgGUGAAAugCGUAGAuaucgggagGAacACCacugGCGAAGGCggccccCuGgg 733    
+                            GG :G GG:G:G:GGAACU:C:GGUG AGCGGUGAAAUGCGUAGAUAUC:G:AGGAAC CC+  GGCGAA GC :C:C:CUG: 
+      NZ_LT934425.1 1070705 GGGAGGGGAGAGUGGAACUUCUGGUGGAGCGGUGAAAUGCGUAGAUAUCAGAAGGAACGCCGGCGGCGAAAGCGACUCUCUGGU 1070622
+                            ************************************************************************************ PP
+
+                               v                                                                                 NC
+                            ))))-))),,,]]]]--.]]]],,,,<<<<<<---<<---<<<<_________>>>>--->>>>>>>>,,,,,,,,,,(((((( CS
+  SSU_rRNA_bacteria     734 ccgguaCuGACgCugAg.gcgCGAAAGCguGGGgAgCaAAcgGGAUUAGAUACCCcgGUAGuCCacGCcgUAAACGAUGggcgC 816    
+                            CCG +ACUGACGCU:AG G:GCGAAAGC::GGGGAGCAAACGGGAUUAGAUACCCCGGUAGUCC::GCCGUAAACGAUGGGC:C
+      NZ_LT934425.1 1070621 CCGAAACUGACGCUGAGuGUGCGAAAGCUAGGGGAGCAAACGGGAUUAGAUACCCCGGUAGUCCUAGCCGUAAACGAUGGGCAC 1070538
+                            ***************988****************************************************************** PP
+
+                              v          v     v          v                                                      NC
+                            ,,<<<<<<<<<<<<_____>>>>>>>>>>>>,,,<<____>>,,,,,))))))}}}},<<<------<<<<____>>>>----> CS
+  SSU_rRNA_bacteria     817 UAGgcgccggggggauuaaccccccggcgcCgaAGcuAAcgCauUAAGcgccCCgCCUGgGGAgUACggcCGCAAGgcugAAAC 900    
+                            UA G::::G:: : +U A  : ::C::::C G AGCUAACGCAUUAAG:GCCCCGCCUGGGGAGUACGGCCGCAAGGCU+AAAC
+      NZ_LT934425.1 1070537 UAAGUAGAGGGGUUUUGAUUAUUUCUCUGCCGGAGCUAACGCAUUAAGUGCCCCGCCUGGGGAGUACGGCCGCAAGGCUAAAAC 1070454
+                            ************************************************************************************ PP
+
+                                                                                                                 NC
+                            >>,,,,,,,,{{{{{-{{{{{{{-{{,,{{{{{{{{{{{{{{{{{,,,,<<<<________>>>>,,,,,,,,{{{{{{{,,,, CS
+  SSU_rRNA_bacteria     901 uCAAAGGAAUuGaCgGgGgCCCGCaCAAGCGguGgagcauGuGGuUUAAuuCGAuGcaAcgCGaaGAACCUUACCcgggcUUGA 984    
+                            UCAAA GAAUUGACGGGGGC:CGCACAAGCGGUGGAGCAUGUGG:UUAAUUCGAUGCAACGCGAAGAACCUUACC:GG:CUUGA
+      NZ_LT934425.1 1070453 UCAAAAGAAUUGACGGGGGCUCGCACAAGCGGUGGAGCAUGUGGCUUAAUUCGAUGCAACGCGAAGAACCUUACCGGGGCUUGA 1070370
+                            ************************************************************************************ PP
+
+                                    v     vvv          vvv  v                vv                                  NC
+                            ,((((((((..,,<<<<<<<____>>>>>>>,<<<<__......__>>>>)))))-))),[[-[[[[--[[[[[[[[[,,,((( CS
+  SSU_rRNA_bacteria     985 cgugccggg..aaccccccgGAaAcgggggguccccuu......aaggggcccggacacAGGUGcugCAuGgcuGuCGUCAGCu 1060   
+                            C:UG ::G   +A:   CC:GAAA:GG   :+ :C: U      + :G:  C::  CA:AGGUG:UGCAUGGCUGUCGUCAGCU
+      NZ_LT934425.1 1070369 CAUGGUAGAagUAGAAUCCUGAAAGGGUGACGAUCGGUauccagUCCGAAGCUAU-CACAGGUGUUGCAUGGCUGUCGUCAGCU 1070287
+                            ****555555999******************955555559999555555555555.**************************** PP
+
+                                           v            v                                                        NC
+                            (((<<<____>>>,,<<<<______>>>>,,)))))),,,,,((((,<<<<<<<---<<--<<<______>>>>>---->>>>> CS
+  SSU_rRNA_bacteria    1061 CGuguCGUGAGauGUcgGGUUAAGUCCcgcAaCGaGCGCAACCCccgccccuagUUgCcAucgguuuauuccggGcACUcuagg 1144   
+                            CGU:UCGUGAGA:GU GGGUUAAGUCCC +AACGAGCG AACCC::G:C::UA UUGC:A+C G+U+AU+C G:GCACU UA::
+      NZ_LT934425.1 1070286 CGUGUCGUGAGACGUUGGGUUAAGUCCCCUAACGAGCGAAACCCUUGUCUUUAGUUGCUAACGGGUAAUGCUGAGCACUUUAGA 1070203
+                            ************************************************************************************ PP
+
+                                                                                                                 NC
+                            >>,,<<<<<<<<_____>>>>>>>>,,,,,)))),,,,]]]]-]]]---]]]]]]]],,,,}}}}}}},,,}}-}}}}}}}}}} CS
+  SSU_rRNA_bacteria    1145 ggGACcgCCggcGauAAgccGGagGAAGGuggGGAuGACGuCAaguCauCauggCCCUUAugcccgGGGCuaCACaCgugcuaC 1228   
+                            G:GAC:GCCG:CG+UAAG:CGGA:GAAGGU::GGA GACGUCAAGUCAUCAUG:CCCUUAUG:CC:GGGCU:CACACGUGCUAC
+      NZ_LT934425.1 1070202 GAGACUGCCGUCGUUAAGACGGAGGAAGGUGGGGACGACGUCAAGUCAUCAUGGCCCUUAUGUCCCGGGCUGCACACGUGCUAC 1070119
+                            ************************************************************************************ PP
+
+                                                                                                                 NC
+                            ,,,<<<<<<<-----<<<--<<---<<<____>>>--->>---->>>----->>>>>>>,,,,,,<---<<<<<<<<_______ CS
+  SSU_rRNA_bacteria    1229 AAUGgccggcACAaaggGuaGCaAagccGcGAggcggAGCuAAUCccauAAAgccggcCucAGUUCGGAcuGgaGgCUGcAAcU 1312   
+                            AAUG::CGG:ACAAA:GG++GC+AA::CGCGAG::GG GC AA CC:AUAAA:CCG::CUCAGUUC+GA:UGGAGGCUG AACU
+      NZ_LT934425.1 1070118 AAUGGUCGGUACAAAGGGAUGCUAAGUCGCGAGAUGGUGCGAAACCUAUAAAGCCGAUCUCAGUUCAGAUUGGAGGCUGAAACU 1070035
+                            ************************************************************************************ PP
+
+                                                                                                                 NC
+                            _>>>>>>>>--->,,,,,}}}}},,,,,<<<<<<<<_____.__>>>>>>>>,,,,,,}}---}}}}}}}}}}-}},,<-<<-< CS
+  SSU_rRNA_bacteria    1313 CGcCucCagGAAGuuGGAauCGCUAGUAaucGcggcUCAGc.AugccgCgguGAAUACGuUCcCGGGcCuuGuACaCACCGcCC 1395   
+                            CGCCUCCA:GAAGUUGGAAUCGCUAGUAAUCGCGG:UCAGC A :CCGCGGUGAAUA GUUCCCG:GCCUUGUACACACCGCCC
+      NZ_LT934425.1 1070034 CGCCUCCAUGAAGUUGGAAUCGCUAGUAAUCGCGGAUCAGCuACGCCGCGGUGAAUAUGUUCCCGAGCCUUGUACACACCGCCC 1069951
+                            ************************************************************************************ PP
+
+                                  v  v                    vv   v v                   vv   vv                   v NC
+                            <---<<<<<<<<--<<<<<<<<<<<<----<<<<<<-<<<<--<<.____.>>->>>>>>>>>>--->>>>>>>>>>>>-->>> CS
+  SSU_rRNA_bacteria    1396 GUCAcgcCacggaAgccggccccgcCcGAAGccgccgcgccAAcc.uuaa.ggaggcgggcggCuAaGgcggggccggcgAccg 1477   
+                            GUCA:G CA ::AA:C::::::C:CCC AA  C:C   :C:AACC +UAA GGA:G:  G:G  UAAGG:G::::::G:GA:: 
+      NZ_LT934425.1 1069950 GUCAAGCCACCCAAGCAAGAUGCACCCAAAAUCGCCUGCCUAACCcGUAAgGGAGGGAAGUGCCUAAGGUGUGUUUUGUGAGGA 1069867
+                            **********************************************99999********************************* PP
+
+                              v                                                      NC
+                            >>>>>---->>-->>-->,<<<<<<<<<<____>>>>>>>>>>::::::::::::: CS
+  SSU_rRNA_bacteria    1478 gGgcgAAGUCGUAaCAAGGuagCcguaccGGAAggugcgGcugGAUcAccUcCUUu 1533   
+                            GG C:AAGUCGUAACAAGGUAG CGUA:: GAA::UGCG CUGGAUCACCUCCUUU
+      NZ_LT934425.1 1069866 GGACUAAGUCGUAACAAGGUAGUCGUAGGAGAACCUGCGGCUGGAUCACCUCCUUU 1069811
+                            ******************************************************** PP
+
+
+
+Internal CM pipeline statistics summary:
+----------------------------------------
+Query model(s):                                                  1  (1533 consensus positions)
+Target sequences:                                                1  (8812306 residues searched)
+Target sequences re-searched for truncated hits:                 1  (7664 residues re-searched)
+Windows   passing  local HMM SSV           filter:            1511  (0.3668); expected (0.35)
+Windows   passing  local HMM Viterbi       filter:                  (off)
+Windows   passing  local HMM Viterbi  bias filter:                  (off)
+Windows   passing  local HMM Forward       filter:              14  (0.003972); expected (0.005)
+Windows   passing  local HMM Forward  bias filter:               9  (0.002324); expected (0.005)
+Windows   passing glocal HMM Forward       filter:               1  (0.0004683); expected (0.005)
+Windows   passing glocal HMM Forward  bias filter:               1  (0.0004683); expected (0.005)
+Envelopes passing glocal HMM envelope defn filter:               1  (0.0001802); expected (0.005)
+Envelopes passing  local CM  CYK           filter:               1  (0.0001802); expected (0.0001)
+Total CM hits reported:                                          1  (0.0001802); includes 0 truncated hit(s)
+
+# CPU time: 32.00u 0.50s 00:00:32.50 Elapsed: 00:00:02.63
+//
+[ok]
