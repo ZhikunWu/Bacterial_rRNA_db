@@ -81,6 +81,15 @@ def record_to_db(assembly_summary, out_db):
             VALUES
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         """, (r))
+    ### Create index
+    cursor.execute("""
+        CREATE INDEX species2infor
+        on AccessionSpecies (species);
+    """)
+    cursor.execute("""
+        CREATE INDEX gname2infor
+        on AccessionSpecies (genome_name);
+    """)
     cursor.close()
     conn.commit()
     conn.close()
