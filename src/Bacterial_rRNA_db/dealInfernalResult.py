@@ -132,12 +132,14 @@ def get_infernal_search_seq(infernal_file, evalue_thr, length_thr):
     record = parse_infernal_result(infernal_file, evalue_thr, length_thr)
     recordLen = len(record)
     seqResult = []
+    GeneCopy = tuple()
     for r in record:
         genome, seq_desc, strand, start, end, gc, description = r
         target_seq = get_seq(genome, seq_desc, strand, start, end)
         genome_base = os.path.basename(genome)
         seqResult.append((genome_base, seq_desc, strand, start, end, gc, target_seq))
-    GeneCopy = (genome_base, recordLen)
+
+        GeneCopy = (genome_base, recordLen)
     return seqResult, GeneCopy
 
 def result_to_db(indir, evalue_thr, length_thr, out_db):
@@ -181,25 +183,29 @@ def result_to_db(indir, evalue_thr, length_thr, out_db):
         files = os.listdir(indir)
         for f in files:
             f = indir + f
-            seqResult, GeneCopy = get_infernal_search_seq(f, evalue_thr, length_thr)
-            ### Insert genome name and rRNA copies
-            cursor.execute("""
-                INSERT INTO GeneCopy
-                (genome_name, copy)
-                VALUES
-                (?, ?)
-            """, (GeneCopy))
-            ### Insert all copies of target rRNA in the given genome
-            for s in seqResult:
-                cursor.execute("""
-                    INSERT INTO BacterialSeq
-                    (genome_name, 
-                    contig_id, contig_strand,
-                    contig_start, contig_end, 
-                    gc_ratio, sequence)
-                    VALUES
-                    (?, ?, ?, ?, ?, ?, ?);
-                """, (s))
+            if f.endswith(("fna", "fasta", "fa")):
+                seqResult, GeneCopy = get_infernal_search_seq(f, evalue_thr, length_thr)
+                if seqResult != [] and len(GeneCopy) != 0:
+                    ### Insert genome name and rRNA copies
+                    cursor.execute("""
+                        INSERT INTO GeneCopy
+                        (genome_name, copy)
+                        VALUES
+                        (?, ?)
+                    """, (GeneCopy))
+                    ### Insert all copies of target rRNA in the given genome
+                    for s in seqResult:
+                        cursor.execute("""
+                            INSERT INTO BacterialSeq
+                            (genome_name, 
+                            contig_id, contig_strand,
+                            contig_start, contig_end, 
+                            gc_ratio, sequence)
+                            VALUES
+                            (?, ?, ?, ?, ?, ?, ?);
+                        """, (s))
+            else:
+                print("Please check whether the file is the output file of infernal:\n%s\n." % f) 
     cursor.close()
     conn.commit()
     conn.close()
