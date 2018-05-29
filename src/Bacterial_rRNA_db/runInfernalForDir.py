@@ -56,10 +56,11 @@ def run_infernal_for_dir(out_dir, seed_file, resultDir):
         f_base = os.path.basename(f)
         out_f = result_dir + f_base
         cmd = "cmsearch %s %s > %s" % (seed_file, f, out_f)
-        try:
+        # try:
+        if f.endswith(("fna", "fasta", "fa")):
             os.system(cmd)
-        except FileNotFoundError:
-            print("Please check whether the tool cmsearch (of infernal) exists in your PATH.")
+        # except FileNotFoundError:
+        #     print("Please check whether the tool cmsearch (of infernal) exists in your PATH.")
 
 def main():
     parser = argparse.ArgumentParser(description="Get the rRNA information based on software infernal nad the genome sequence.")
