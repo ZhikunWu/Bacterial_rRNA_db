@@ -39,6 +39,7 @@ def silva_species(silva_fa, out_file):
         descs = ' '.join(desc.split()[1:]).split(";")
         descLen = len(descs)
         kindom = descs[0]
+        ### select Bacterial with seven levels.   ## Archaea
         if kindom == "Bacteria" and descLen == 7:
             genus_length = [len(s.split()) for s in descs[:-1]]
             genus_length_sum = sum(genus_length)
@@ -49,11 +50,12 @@ def silva_species(silva_fa, out_file):
                     genus, spe_string = genus_species[:2]
                     spe_match1 = re.findall("sp\.$", spe_string)
                     spe_match2 = re.findall("\d+", spe_string)
-                    if not (spe_match1 or spe_match2 or spe_string[0] == spe_string[0].upper()):
-                        seven_level = descs[:6] + [spe_string]
-                        print(seven_level)
+                    spe_match3 = re.findall("uncultured", spe_string)
+                    if not (spe_match1 or spe_match2 or spe_match3 or spe_string[0] == spe_string[0].upper()):
+                        seven_level = descs[:6] + ['%s %s' % (descs[5], spe_string)]
+                        #print(seven_level)
                         GenusLevel.add(tuple(seven_level))
-                        out_h.write("%s;%s %s\n" % (";".join(descs[:6]), genus, spe_string))
+                        out_h.write("%s\t%s;%s %s\n%s\n" % (accession, ";".join(descs[:6]), genus, spe_string, seq))
             # else:
             #     print(desc)
     return GenusLevel
@@ -94,6 +96,10 @@ def silva_species_to_db(silva_fa, out_file, out_db):
             VALUES
             (?, ?, ?, ?, ?, ?, ?);
         """, (s))
+    cursor.execute("""
+        CREATE INDEX species2taxo
+        on SpeciesTaxonomy (Species);
+    """)
     cursor.close()
     conn.commit()
     conn.close()
