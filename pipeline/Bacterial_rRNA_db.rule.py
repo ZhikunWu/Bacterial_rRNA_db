@@ -6,13 +6,14 @@ import os
 
 __author__ = 'Zhikun Wu'
 __email__ = '598466208@qq.com'
-__date__ = '20180.05.25'
+__date__ = '2018.06.11'
 
 
 IN_PATH = '/home/wzk/database/Bacterial_genome'
 SRC_DIR = '/home/wzk/github/Bacterial_rRNA_db/src/Bacterial_rRNA_db'
 
 SAMPLES = config["SAMPLES"]
+THREADS = config["threads"]
 
 
 
@@ -22,7 +23,9 @@ rule all:
         expand(IN_PATH + "/{sample}/database/Bacterial_16SrRNA.db", sample=SAMPLES),
         IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.db",
         expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.fasta", sample=SAMPLES),
-
+        IN_PATH + "/fastqjoin.join_sample.sam",
+        expand(IN_PATH + "/{sample}/temp1", sample=SAMPLES),
+        expand(IN_PATH + "/{sample}/temp2", sample=SAMPLES),
 
 rule runInfernal:
     input:
@@ -99,4 +102,59 @@ rule NCBITaxoSeq:
         IN_PATH + "/log/NCBITaxoSeq_{sample}.log"
     run:
         shell("python {params.NCBI16STaxoSeq} --accession {input.accession} --taxonomy {input.taxonomy} --sequence {input.sequence} --out {output.fa} --geneCopy {output.copy} >{log} 2>&1")
+
+rule GenusSeq:
+    input:
+        fa = rules.NCBITaxoSeq.output.fa,
+    output:
+        fa = IN_PATH + "/{sample}/temp1",
+    params:
+        SameGenusSeq = SRC_DIR + "/SameGenusSeq.py",
+        outdir = IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA",
+    log:
+        IN_PATH + "/log/GenusSeq_{sample}.log"        
+    run:
+        shell("python {params.SameGenusSeq} --input {input.fa} --outdir {params.outdir} >{log} 2>&1")
+        shell("touch {output.fa}")
+
+rule GenusDiffStats:
+    input:
+        fa = rules.GenusSeq.output.fa,
+    output:
+        temp = IN_PATH + "/{sample}/temp2",
+    params:
+        GenusSeqDiffStats = SRC_DIR + "/GenusSeqDiffStats.py",
+        indir = rules.GenusSeq.params.outdir,
+        outdir = IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA_compare",
+    log:
+        IN_PATH + "/log/GenusDiffStats_{sample}.log"  
+    run:
+        shell("python {params.GenusSeqDiffStats} --indir {params.indir} --outdir {params.outdir} >{log} 2>&1")
+        shell("touch {output.temp}")
+
+rule BWAindex:
+    input:
+        taxo_seq = rules.SILVASpecies.output.taxo_seq,
+    output:
+        bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
+    log:
+        IN_PATH + "/log/BWAindex.log"
+    run:
+        shell("bwa index {input.taxo_seq} >{log} 2>&1")
+
+rule BWAalign:
+    input:
+        fq = IN_PATH + "/fastqjoin.join_sample.fastq",
+        ref = rules.SILVASpecies.output.taxo_seq,
+        bwt = rules.BWAindex.output.bwt,
+    output:
+        sam = IN_PATH + "/fastqjoin.join_sample.sam",
+    threads:
+        THREADS
+    log:
+        IN_PATH + "/log/BWAalign.log"
+    run:
+        shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
+
+
 
