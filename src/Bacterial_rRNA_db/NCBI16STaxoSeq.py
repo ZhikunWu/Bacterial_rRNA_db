@@ -57,16 +57,22 @@ def combine_assembly_silva_16S(AccessionSpecies_db, assembly_db, BacterialSeq_db
 
     Records = cursor.fetchall()
 
+    Genomes = {}
     ### output the records
     out_h = open(out_file,"w")
     for r in Records:
+        genome = r[0]
         accession_desc = ','.join(map(str, r[:4]))
         taxonomy = ';'.join(map(str, r[4:11]))
         seq = r[-1]
         ######################################################
         ### sequence maybe None bacause the alignment result with infernal may filted out based on the length threshold
-        if seq != None:
-            out_h.write(">%s\t%s\n%s\n" % (accession_desc, taxonomy, seq))
+        if genome in Genomes:
+            continue
+        else:
+            Genomes[genome] = 1
+            if seq != None:
+                out_h.write(">%s\t%s\n%s\n" % (accession_desc, taxonomy, seq))
     out_h.close()
 
     ### get the taxonomy and gene coppy
