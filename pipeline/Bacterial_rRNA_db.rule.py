@@ -26,7 +26,12 @@ rule all:
         IN_PATH + "/fastqjoin.join_sample.sam",
         expand(IN_PATH + "/{sample}/temp1", sample=SAMPLES),
         expand(IN_PATH + "/{sample}/temp2", sample=SAMPLES),
+        expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.1.bt2", sample=SAMPLES),
+        expand(IN_PATH + "/{sample}/mapping/fastqjoin.join.sam", sample=SAMPLES),
+        expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_record.txt", sample=SAMPLES),
+        expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_texonomy.txt", sample=SAMPLES),
 
+########################## Extract the 16S rRNA gene sequence from genome ###################
 rule runInfernal:
     input:
         indir = IN_PATH + "/species",
@@ -102,7 +107,97 @@ rule NCBITaxoSeq:
         IN_PATH + "/log/NCBITaxoSeq_{sample}.log"
     run:
         shell("python {params.NCBI16STaxoSeq} --accession {input.accession} --taxonomy {input.taxonomy} --sequence {input.sequence} --out {output.fa} --geneCopy {output.copy} >{log} 2>&1")
+########################################################################################
 
+
+################################ Mapping reads using bwa #############################
+# rule BWAindex:
+#     input:
+#         taxo_seq = rules.SILVASpecies.output.taxo_seq,
+#     output:
+#         bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
+#     log:
+#         IN_PATH + "/log/BWAindex.log"
+#     run:
+#         shell("bwa index {input.taxo_seq} >{log} 2>&1")
+
+# rule BWAalign:
+#     input:
+#         fq = IN_PATH + "/fastqjoin.join_sample.fastq",
+#         ref = rules.SILVASpecies.output.taxo_seq,
+#         bwt = rules.BWAindex.output.bwt,
+#     output:
+#         sam = IN_PATH + "/fastqjoin.join_sample.sam",
+#     threads:
+#         THREADS
+#     log:
+#         IN_PATH + "/log/BWAalign.log"
+#     run:
+#         shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
+
+#########################################################################################
+
+
+############################### Mapping reads using bowtie2 ##############################
+rule bowtie2build:
+    input:
+        fa = rules.NCBITaxoSeq.output.fa,
+    output:
+        bt2 = IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.1.bt2",
+    threads:
+        THREADS
+    params:
+        ref_base = IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA",
+    log:
+        IN_PATH + "/log/bowtie2build_{sample}.log"
+    run:
+        shell("bowtie2-build --threads {threads} {input.fa}  {params.ref_base} >{log} 2>&1")
+
+rule bowtie2Align:
+    input:
+        bt2 = rules.bowtie2build.output.bt2,
+        ref_base = rules.bowtie2build.params.ref_base,
+        fastq = IN_PATH + "/fastqjoin.join.fastq",
+    output:
+        sam = IN_PATH + "/{sample}/mapping/fastqjoin.join.sam",
+    threads:
+        THREADS
+    log:
+        IN_PATH + "/log/bowtie2Align_{sample}.log"
+    run:
+        shell("bowtie2 -p {threads} -x {input.ref_base} -U {input.fastq} -S {output.sam} >{log} 2>&1")
+
+rule FiltSAM:
+    input:
+        sam = rules.bowtie2Align.output.sam,
+    output:
+        record = IN_PATH + "/{sample}/mapping/fastqjoin.join_record.txt",
+    params:
+        FiltSAM = SRC_DIR + "/FiltSAM.py",
+        lenThreshold = 0.95,
+        matchThreshold = 0.9,
+    log:
+        IN_PATH + "/log/FiltSAM_{sample}.log"
+    run:
+        shell("python {params.FiltSAM} --sam {input.sam} --lenThreshold {params.lenThreshold} --matchThreshold {params.matchThreshold} --out {output.record} >{log} 2>&1")
+
+rule TaxoCount:
+    input:
+        fasta = rules.NCBITaxoSeq.output.fa,
+        record = rules.FiltSAM.output.record,
+    output:
+        taxo = IN_PATH + "/{sample}/mapping/fastqjoin.join_texonomy.txt",
+    params:
+        SpeciesNum = SRC_DIR + "/SpeciesNum.py",
+    log:
+        IN_PATH + "/log/TaxoCount_{sample}.log"       
+    run:
+        shell("python {params.SpeciesNum} --fasta {input.fasta} --mapping {input.record} --out {output.taxo} >{log} 2>&1") 
+
+#############################################################################################
+
+
+################## Compare the sequence difference among species within genus ############
 rule GenusSeq:
     input:
         fa = rules.NCBITaxoSeq.output.fa,
@@ -131,30 +226,4 @@ rule GenusDiffStats:
     run:
         shell("python {params.GenusSeqDiffStats} --indir {params.indir} --outdir {params.outdir} >{log} 2>&1")
         shell("touch {output.temp}")
-
-rule BWAindex:
-    input:
-        taxo_seq = rules.SILVASpecies.output.taxo_seq,
-    output:
-        bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
-    log:
-        IN_PATH + "/log/BWAindex.log"
-    run:
-        shell("bwa index {input.taxo_seq} >{log} 2>&1")
-
-rule BWAalign:
-    input:
-        fq = IN_PATH + "/fastqjoin.join_sample.fastq",
-        ref = rules.SILVASpecies.output.taxo_seq,
-        bwt = rules.BWAindex.output.bwt,
-    output:
-        sam = IN_PATH + "/fastqjoin.join_sample.sam",
-    threads:
-        THREADS
-    log:
-        IN_PATH + "/log/BWAalign.log"
-    run:
-        shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
-
-
-
+##################################################################################################
