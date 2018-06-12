@@ -71,8 +71,11 @@ def combine_assembly_silva_16S(AccessionSpecies_db, assembly_db, BacterialSeq_db
             continue
         else:
             Genomes[genome] = 1
-            if seq != None:
+            ### seq and taxonomy are not none
+            if seq != None and not taxonomy.startswith("None"):
                 out_h.write(">%s\t%s\n%s\n" % (accession_desc, taxonomy, seq))
+            else:
+                print(accession_desc, taxonomy)
     out_h.close()
 
     ### get the taxonomy and gene coppy
