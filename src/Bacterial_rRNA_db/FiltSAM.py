@@ -75,18 +75,19 @@ def filt_for_sam(sam_file, lenThreshold, matchThreshold, out_file):
             continue
         else:
             lines = line.split("\t")
-            query, flag, subject, position, mapq, cigar, qmate, matePos, insertLen, seq, quality = lines[:11]
-            flag = int(flag)
-            seqLen = len(seq)
-            Tags = lines[11:]
-            MDValue = given_tag(Tags, "MD:Z")
-            if flag == 0:
-                ### Get the match length, it contain seq with match and mismatch
-                MatchLen = match_cigar_length(cigar)
-                MatchNumber = MD_match_number(MDValue)
-                ### Filt with the match threshold
-                if MatchLen >= seqLen * lenThreshold and MatchNumber >=  MatchLen *matchThreshold:
-                    out_h.write("%s\t%s\n" % (query, subject))
+            if len(lines) > 11:
+                query, flag, subject, position, mapq, cigar, qmate, matePos, insertLen, seq, quality = lines[:11]
+                flag = int(flag)
+                seqLen = len(seq)
+                Tags = lines[11:]
+                MDValue = given_tag(Tags, "MD:Z")
+                if flag == 0:
+                    ### Get the match length, it contain seq with match and mismatch
+                    MatchLen = match_cigar_length(cigar)
+                    MatchNumber = MD_match_number(MDValue)
+                    ### Filt with the match threshold
+                    if MatchLen >= seqLen * lenThreshold and MatchNumber >=  MatchLen *matchThreshold:
+                        out_h.write("%s\t%s\n" % (query, subject))
     in_h.close()
     out_h.close()
 
