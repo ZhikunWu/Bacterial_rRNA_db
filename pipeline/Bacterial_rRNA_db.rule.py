@@ -14,6 +14,8 @@ SRC_DIR = '/home/wzk/github/Bacterial_rRNA_db/src/Bacterial_rRNA_db'
 
 SAMPLES = config["SAMPLES"]
 THREADS = config["threads"]
+SILVA_DB_DIR = config["SILVA_DB_DIR"]
+# NCBI_DB_DIR = config["NCBI_DB_DIR"]
 
 
 
@@ -30,6 +32,13 @@ rule all:
         expand(IN_PATH + "/{sample}/mapping/fastqjoin.join.sam", sample=SAMPLES),
         expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_record.txt", sample=SAMPLES),
         expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_texonomy.txt", sample=SAMPLES),
+        "/home/wzk/database/SILVA/SILVA_132_SSUParc_tax_silva_genus.fasta",
+        SILVA_DB_DIR +  "/SILVA_132_SSUParc_tax_silva_genus.1.bt2",
+        SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.1.bt2",
+
+
+################################ For NCBI database  #####################################
+#########################################################################################
 
 ########################## Extract the 16S rRNA gene sequence from genome ###################
 rule runInfernal:
@@ -81,16 +90,17 @@ rule assembly2db:
 
 rule SILVASpecies:
     input:
-        taxo_record = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA.fasta",
+        taxo_record = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva.fasta",
     output:
-        taxo_seq = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta",
-        taxo_db = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.db",
+        taxo_seq = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.fasta",
+        taxo_db = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.db",
     params:
         getSilvaSpecies = SRC_DIR + "/getSilvaSpecies.py",
+        lenThreshold = config["length"]
     log:
         IN_PATH + "/log/SILVASpecies.log"        
     run:
-        shell("python {params.getSilvaSpecies} --input {input.taxo_record}  --out {output.taxo_seq} --database {output.taxo_db} >{log} 2>&1")
+        shell("python {params.getSilvaSpecies} --input {input.taxo_record}  --out {output.taxo_seq} --database {output.taxo_db} --lenThreshold {params.lenThreshold} >{log} 2>&1")
 
 
 rule NCBITaxoSeq:
@@ -109,33 +119,6 @@ rule NCBITaxoSeq:
         shell("python {params.NCBI16STaxoSeq} --accession {input.accession} --taxonomy {input.taxonomy} --sequence {input.sequence} --out {output.fa} --geneCopy {output.copy} >{log} 2>&1")
 ########################################################################################
 
-
-################################ Mapping reads using bwa #############################
-# rule BWAindex:
-#     input:
-#         taxo_seq = rules.SILVASpecies.output.taxo_seq,
-#     output:
-#         bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
-#     log:
-#         IN_PATH + "/log/BWAindex.log"
-#     run:
-#         shell("bwa index {input.taxo_seq} >{log} 2>&1")
-
-# rule BWAalign:
-#     input:
-#         fq = IN_PATH + "/fastqjoin.join_sample.fastq",
-#         ref = rules.SILVASpecies.output.taxo_seq,
-#         bwt = rules.BWAindex.output.bwt,
-#     output:
-#         sam = IN_PATH + "/fastqjoin.join_sample.sam",
-#     threads:
-#         THREADS
-#     log:
-#         IN_PATH + "/log/BWAalign.log"
-#     run:
-#         shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
-
-#########################################################################################
 
 
 ############################### Mapping reads using bowtie2 ##############################
@@ -227,3 +210,89 @@ rule GenusDiffStats:
         shell("python {params.GenusSeqDiffStats} --indir {params.indir} --outdir {params.outdir} >{log} 2>&1")
         shell("touch {output.temp}")
 ##################################################################################################
+
+
+################################ Mapping reads using bwa #############################
+# rule BWAindex:
+#     input:
+#         taxo_seq = rules.SILVASpecies.output.taxo_seq,
+#     output:
+#         bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
+#     log:
+#         IN_PATH + "/log/BWAindex.log"
+#     run:
+#         shell("bwa index {input.taxo_seq} >{log} 2>&1")
+
+# rule BWAalign:
+#     input:
+#         fq = IN_PATH + "/fastqjoin.join_sample.fastq",
+#         ref = rules.SILVASpecies.output.taxo_seq,
+#         bwt = rules.BWAindex.output.bwt,
+#     output:
+#         sam = IN_PATH + "/fastqjoin.join_sample.sam",
+#     threads:
+#         THREADS
+#     log:
+#         IN_PATH + "/log/BWAalign.log"
+#     run:
+#         shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
+
+#########################################################################################
+
+
+
+
+
+
+
+
+################################ For SILVA database ##################################
+######################################################################################
+
+################################# Get 16S reference with genus level #################
+rule SILVAGenus:
+    input:
+        fasta = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva.fasta",
+    output:
+        genus = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_genus.fasta",
+        genus_db =  SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_genus.db",
+    params:
+        getSilvaGenus = SRC_DIR + "/getSilvaGenus.py",
+        lenThreshold = config["length"],
+    log: 
+        IN_PATH + "/log/SILVAGenus.log"
+    run:
+        shell("python {params.getSilvaGenus} --input {input.fasta} --out {output.genus} --database {output.genus_db} --lenThreshold {params.lenThreshold} >{log} 2>&1")
+
+rule GenusBowtie2Build:
+    input:
+        fa = rules.SILVAGenus.output.genus,
+    output:
+        bt2 = SILVA_DB_DIR +  "/SILVA_132_SSUParc_tax_silva_genus.1.bt2",
+    threads:
+        THREADS
+    params:
+        ref_base = SILVA_DB_DIR +  "/SILVA_132_SSUParc_tax_silva_genus",
+    log:
+        IN_PATH + "/log/GenusBowtie2Build.log"
+    run:
+        shell("bowtie2-build --threads {threads} {input.fa}  {params.ref_base} >{log} 2>&1")
+
+
+
+rule SpeciesBowtie2Build:
+    input:
+        fa = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.fasta",
+    output:
+        bt2 = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.1.bt2",
+    threads:
+        THREADS 
+    params:
+        ref_base = SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species",
+    log:
+        IN_PATH + "/log/SpeciesBowtie2Build.log"        
+    run:
+        shell("bowtie2-build --threads {threads} {input.fa}  {params.ref_base} >{log} 2>&1")        
+
+
+########################################################################################
