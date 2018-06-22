@@ -84,23 +84,29 @@ def silva_species(silva_fa, lenThreshold, out_file):
             genus_length = [len(s.split()) for s in descs[:-1]]
             genus_length_sum = sum(genus_length)
             non_normal = is_exist_str("-", descs[:-1])
-            # if genus_length_sum == 6 and not non_normal:
-            if not non_normal:
+            if genus_length_sum == 6 and not non_normal:
+            # if not non_normal:
                 genus_species = descs[-1].split()
                 if len(genus_species) >= 2:
                     genus, spe_string = genus_species[:2]
                     spe_match1 = re.findall("sp\.$", spe_string)
-                    spe_match2 = re.findall("\d+", spe_string)
-                    spe_match3 = re.findall("uncultured", spe_string)
-                    spe_match4 = re.findall("unidentified", spe_string)
-                    if genus == descs[5].split()[0] and not (spe_match1 or spe_match2 or spe_match3 or spe_match4 or spe_string[0] == spe_string[0].upper()):
+                    # spe_match2 = re.findall("\d+", spe_string)
+                    spe_match2 = re.findall("^bacterium", genus)
+                    spe_match3 = re.findall("uncultured", genus)
+                    spe_match4 = re.findall("unidentified", genus)
+                    if genus == descs[5] and not (spe_match2 or spe_match3 or spe_match4):
                         seven_level = descs[:6] + ['%s %s' % (descs[5], spe_string)]
                         seven_level = delete_given_str("\d+", seven_level)
                         ### filte out the short length for sequence
                         GenusLevel.add(tuple(seven_level))
                         if seqLen >= lenThreshold:
                             seq = RNA2DNA(seq)
-                            out_h.write("%s\t%s;%s %s\n%s\n" % (accession, ";".join(descs[:6]), genus, spe_string, seq))
+                            if spe_match1:
+                                print(genus_species)
+                                spe_string = '_'.join(genus_species[1:]).replace('sp._', '')
+                                out_h.write("%s\t%s;%s %s\n%s\n" % (accession, ";".join(descs[:6]), genus, spe_string, seq))
+                            else:
+                                out_h.write("%s\t%s;%s %s\n%s\n" % (accession, ";".join(descs[:6]), genus, spe_string, seq))
                     else:
                         print(desc)
             # else:
