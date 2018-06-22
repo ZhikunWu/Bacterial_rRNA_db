@@ -81,7 +81,8 @@ def filt_for_sam(sam_file, lenThreshold, matchThreshold, out_file):
                 seqLen = len(seq)
                 Tags = lines[11:]
                 MDValue = given_tag(Tags, "MD:Z")
-                if flag == 0:
+                ### flag 4 represent non-mapping
+                if flag != 4:
                     ### Get the match length, it contain seq with match and mismatch
                     MatchLen = match_cigar_length(cigar)
                     MatchNumber = MD_match_number(MDValue)
