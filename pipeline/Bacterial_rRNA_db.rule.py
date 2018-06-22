@@ -213,29 +213,29 @@ rule GenusDiffStats:
 
 
 ################################ Mapping reads using bwa #############################
-# rule BWAindex:
-#     input:
-#         taxo_seq = rules.SILVASpecies.output.taxo_seq,
-#     output:
-#         bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
-#     log:
-#         IN_PATH + "/log/BWAindex.log"
-#     run:
-#         shell("bwa index {input.taxo_seq} >{log} 2>&1")
+rule BWAindex:
+    input:
+        taxo_seq = rules.SILVASpecies.output.taxo_seq,
+    output:
+        bwt = IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.fasta.bwt",
+    log:
+        IN_PATH + "/log/BWAindex.log"
+    run:
+        shell("bwa index {input.taxo_seq} >{log} 2>&1")
 
-# rule BWAalign:
-#     input:
-#         fq = IN_PATH + "/fastqjoin.join_sample.fastq",
-#         ref = rules.SILVASpecies.output.taxo_seq,
-#         bwt = rules.BWAindex.output.bwt,
-#     output:
-#         sam = IN_PATH + "/fastqjoin.join_sample.sam",
-#     threads:
-#         THREADS
-#     log:
-#         IN_PATH + "/log/BWAalign.log"
-#     run:
-#         shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
+rule BWAalign:
+    input:
+        fq = IN_PATH + "/fastqjoin.join_sample.fastq",
+        ref = rules.SILVASpecies.output.taxo_seq,
+        bwt = rules.BWAindex.output.bwt,
+    output:
+        sam = IN_PATH + "/fastqjoin.join_sample.sam",
+    threads:
+        THREADS
+    log:
+        IN_PATH + "/log/BWAalign.log"
+    run:
+        shell("bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2>{log}")
 
 #########################################################################################
 
