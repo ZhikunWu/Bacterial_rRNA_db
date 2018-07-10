@@ -17,6 +17,11 @@ THREADS = config["threads"]
 SILVA_DB_DIR = config["SILVA_DB_DIR"]
 # NCBI_DB_DIR = config["NCBI_DB_DIR"]
 
+def makedir(file):
+    if not os.path.exists(file):
+        # os.makedirs(file)
+        cmd = "mkdir -p %s" % file
+        os.system(cmd)
 
 
 rule all:
@@ -25,16 +30,16 @@ rule all:
         expand(IN_PATH + "/{sample}/database/Bacterial_16SrRNA.db", sample=SAMPLES),
         IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.db",
         expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.fasta", sample=SAMPLES),
-        IN_PATH + "/fastqjoin.join_sample.sam",
-        expand(IN_PATH + "/{sample}/temp1", sample=SAMPLES),
-        expand(IN_PATH + "/{sample}/temp2", sample=SAMPLES),
-        expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.1.bt2", sample=SAMPLES),
-        expand(IN_PATH + "/{sample}/mapping/fastqjoin.join.sam", sample=SAMPLES),
-        expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_record.txt", sample=SAMPLES),
-        expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_texonomy.txt", sample=SAMPLES),
-        "/home/wzk/database/SILVA/SILVA_132_SSUParc_tax_silva_genus.fasta",
-        SILVA_DB_DIR +  "/SILVA_132_SSUParc_tax_silva_genus.1.bt2",
-        SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.1.bt2",
+        # IN_PATH + "/fastqjoin.join_sample.sam",
+        # expand(IN_PATH + "/{sample}/temp1", sample=SAMPLES),
+        # expand(IN_PATH + "/{sample}/temp2", sample=SAMPLES),
+        # expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.1.bt2", sample=SAMPLES),
+        # expand(IN_PATH + "/{sample}/mapping/fastqjoin.join.sam", sample=SAMPLES),
+        # expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_record.txt", sample=SAMPLES),
+        # expand(IN_PATH + "/{sample}/mapping/fastqjoin.join_texonomy.txt", sample=SAMPLES),
+        # "/home/wzk/database/SILVA/SILVA_132_SSUParc_tax_silva_genus.fasta",
+        # SILVA_DB_DIR +  "/SILVA_132_SSUParc_tax_silva_genus.1.bt2",
+        # SILVA_DB_DIR + "/SILVA_132_SSUParc_tax_silva_species.1.bt2",
 
 
 ################################ For NCBI database  #####################################
@@ -43,7 +48,7 @@ rule all:
 ########################## Extract the 16S rRNA gene sequence from genome ###################
 rule runInfernal:
     input:
-        indir = IN_PATH + "/species",
+        indir = IN_PATH + "/Bacteria_genome",
     output:
         out = IN_PATH + "/{sample}/species_infernal/temp",
     params:
@@ -62,18 +67,19 @@ rule runInfernal:
 
 rule dealInfernalResult:
     input:
-        indir = rules.runInfernal.params.outdir,
+        out = rules.runInfernal.output.out,
         temp = rules.runInfernal.output.out,
     output:
         database = IN_PATH + "/{sample}/database/Bacterial_16SrRNA.db",
     params:
+        indir = rules.runInfernal.params.outdir,
         dealInfernalResult = SRC_DIR + "/dealInfernalResult.py",
         evalue = config["evalue"],
         length = config["length"], #The length of 16S rRNA is normally 1500
     log:
         IN_PATH + "/log/dealInfernalResult_{sample}.log"
     run:
-        shell("python {params.dealInfernalResult} --indir {input.indir} --evalue {params.evalue} --length {params.length} --database {output.database} >{log} 2>&1")
+        shell("python {params.dealInfernalResult} --indir {params.indir} --evalue {params.evalue} --length {params.length} --database {output.database} >{log} 2>&1")
 
 rule assembly2db:
     input:
