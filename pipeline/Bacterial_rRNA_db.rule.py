@@ -27,9 +27,9 @@ def makedir(file):
 rule all:
     input:
         expand(IN_PATH + "/{sample}/species_infernal/temp", sample=SAMPLES),
-        expand(IN_PATH + "/{sample}/database/Bacterial_16SrRNA.db", sample=SAMPLES),
-        IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.db",
-        expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.fasta", sample=SAMPLES),
+#        expand(IN_PATH + "/{sample}/database/Bacterial_16SrRNA.db", sample=SAMPLES),
+#        IN_PATH + "/SILVA_132_SSUParc_tax_silva_DNA_species.db",
+#        expand(IN_PATH + "/{sample}/database/NCBI_accession_16SrRNA.fasta", sample=SAMPLES),
         # IN_PATH + "/fastqjoin.join_sample.sam",
         # expand(IN_PATH + "/{sample}/temp1", sample=SAMPLES),
         # expand(IN_PATH + "/{sample}/temp2", sample=SAMPLES),
